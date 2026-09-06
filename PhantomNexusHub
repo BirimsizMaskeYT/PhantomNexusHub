@@ -1,0 +1,159 @@
+-- Phantom Nexus Hub | Özel Tasarım + LinoriaLib Ekstra Menü Entegrasyonu
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Ana Hub UI Çerçevesi (Özel Tasarımımız)
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "PhantomNexusHub"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 580, 0, 380)
+MainFrame.Position = UDim2.new(0.5, -290, 0.5, -190)
+MainFrame.BackgroundColor3 = Color3.fromRGB(245, 250, 255) -- Açık Beyaz Arka Plan
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = MainFrame
+
+-- Başlık & Profil Alanı
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0, 45)
+TopBar.BackgroundColor3 = Color3.fromRGB(0, 180, 216) -- İnce Açık Mavi (Aqua)
+TopBar.BorderSizePixel = 0
+TopBar.Parent = MainFrame
+
+local TopBarCorner = Instance.new("UICorner")
+TopBarCorner.CornerRadius = UDim.new(0, 8)
+TopBarCorner.Parent = TopBar
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(0, 250, 1, 0)
+TitleLabel.Position = UDim2.new(0, 15, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "🚪 Phantom Nexus Hub"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 16
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Parent = TopBar
+
+local ProfileLabel = Instance.new("TextLabel")
+ProfileLabel.Size = UDim2.new(0, 250, 1, 0)
+ProfileLabel.Position = UDim2.new(1, -265, 0, 0)
+ProfileLabel.BackgroundTransparency = 1
+ProfileLabel.Text = "👤 " .. LocalPlayer.Name
+ProfileLabel.TextColor3 = Color3.fromRGB(230, 245, 255)
+ProfileLabel.TextSize = 14
+ProfileLabel.Font = Enum.Font.GothamSemibold
+ProfileLabel.TextXAlignment = Enum.TextXAlignment.Right
+ProfileLabel.Parent = TopBar
+
+-- Sol Sekme Listesi
+local TabContainer = Instance.new("ScrollingFrame")
+TabContainer.Size = UDim2.new(0, 140, 1, -55)
+TabContainer.Position = UDim2.new(0, 5, 0, 50)
+TabContainer.BackgroundTransparency = 1
+TabContainer.CanvasSize = UDim2.new(0, 0, 0, 350)
+TabContainer.ScrollBarThickness = 3
+TabContainer.Parent = MainFrame
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 4)
+UIListLayout.Parent = TabContainer
+
+local tabsList = {
+    "🚪 Home",
+    "🏠 Main",
+    "⚡ Exploits",
+    "👁️ Visuals",
+    "⚙️ Misc",
+    "🔧 Setting",
+    "📁 Archives",
+    "🚪 Floor 2",
+    "🌲 OutDoors",
+    "⭐ Ekstra Menü"
+}
+
+-- Sekme Butonlarını Oluşturma
+for i, tabName in ipairs(tabsList) do
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(1, -5, 0, 30)
+    TabButton.BackgroundColor3 = Color3.fromRGB(230, 240, 250)
+    TabButton.BorderSizePixel = 0
+    TabButton.Text = tabName
+    TabButton.TextColor3 = Color3.fromRGB(0, 119, 182) -- Aqua Vurgulu Yazı
+    TabButton.TextSize = 12
+    TabButton.Font = Enum.Font.GothamBold
+    TabButton.Parent = TabContainer
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 5)
+    btnCorner.Parent = TabButton
+    
+    -- Ekstra Menü tıklandığında LinoriaLib Ekstra modülünü tetikle
+    if tabName == "⭐ Ekstra Menü" then
+        TabButton.MouseButton1Click:Connect(function()
+            -- LinoriaLib Entegrasyon Başlangıcı
+            task.spawn(function()
+                local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+                local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+                local ExtraWindow = Library:CreateWindow({
+                    Title = 'Phantom Nexus | LinoriaLib Ekstra Menü',
+                    Center = true,
+                    AutoShow = true
+                })
+                local ExtraTab = ExtraWindow:AddTab('🛠️ Performans', 'tool')
+                local GroupBox = ExtraTab:AddLeftGroupbox('VPN & Lag Optimizasyonu')
+                
+                GroupBox:AddButton('Oyun Lagını Azalt (FPS Booster)', function()
+                    for _, v in pairs(workspace:GetDescendants()) do
+                        if v:IsA('BasePart') then
+                            v.Material = Enum.Material.SmoothPlastic
+                            v.CastShadow = false
+                        end
+                    end
+                end)
+                
+                GroupBox:AddToggle('Özel VPN Simülatörü', {
+                    Text = 'Ping Düşürücü Aktif',
+                    Default = false,
+                    Callback = function(val)
+                        print("VPN Durumu: ", val)
+                    end
+                })
+            end)
+        end)
+    end
+end
+
+-- İçerik Görüntüleme Alanı (Main)
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, -155, 1, -55)
+ContentFrame.Position = UDim2.new(0, 150, 0, 50)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.Parent = MainFrame
+
+local ContentCorner = Instance.new("UICorner")
+ContentCorner.CornerRadius = UDim.new(0, 6)
+ContentCorner.Parent = ContentFrame
+
+-- Home Paneli (Güncellemeler)
+local HomePanel = Instance.new("TextLabel")
+HomePanel.Size = UDim2.new(1, -20, 1, -20)
+HomePanel.Position = UDim2.new(0, 10, 0, 10)
+HomePanel.BackgroundTransparency = 1
+HomePanel.Text = "--- PHANTOM NEXUS HUB V3.0 ---\n\n• v3.0 Sürümü Güncellendi!\n• Floor 2 ve The Archives eklendi.\n• Özel İnce Açık Mavi & Beyaz tasarım aktif.\n• VPN ve FPS Booster modülleri hazır."
+HomePanel.TextColor3 = Color3.fromRGB(50, 50, 50)
+HomePanel.TextSize = 13
+HomePanel.Font = Enum.Font.Gotham
+HomePanel.TextXAlignment = Enum.TextXAlignment.Left
+HomePanel.TextYAlignment = Enum.TextYAlignment.Top
+HomePanel.Parent = ContentFrame
