@@ -206,3 +206,215 @@ for name, panel in pairs(panels) do
     end
 end
 
+-- Phantom Nexus Hub | Exploits Sekmesi (Bypass, Removals & Damage)
+local ExploitsPanel = panels["⚡ Exploits"] -- Doğrudan Exploits sekmesini seçiyoruz
+ExploitsPanel.CanvasSize = UDim2.new(0, 0, 0, 600) -- Kaydırılabilir alan boyutu
+
+-- Sekme Başlığı
+local ExploitTitle = Instance.new("TextLabel")
+ExploitTitle.Size = UDim2.new(1, -20, 0, 30)
+ExploitTitle.Position = UDim2.new(0, 10, 0, 5)
+ExploitTitle.BackgroundTransparency = 1
+ExploitTitle.Text = "⚡ Exploits - Bypass, Removals & Damage"
+ExploitTitle.TextColor3 = Color3.fromRGB(0, 150, 199)
+ExploitTitle.TextSize = 14
+ExploitTitle.Font = Enum.Font.GothamBold
+ExploitTitle.TextXAlignment = Enum.TextXAlignment.Left
+ExploitTitle.Parent = ExploitsPanel
+
+--------------------------------------------------------------------------------
+-- 1. BÖLÜM: BYPASS (Hookmetamethod ile)
+--------------------------------------------------------------------------------
+local BypassBox = Instance.new("Frame")
+BypassBox.Size = UDim2.new(1, -20, 0, 240)
+BypassBox.Position = UDim2.new(0, 10, 0, 40)
+BypassBox.BackgroundColor3 = Color3.fromRGB(240, 248, 255)
+BypassBox.BorderSizePixel = 0
+BypassBox.Parent = ExploitsPanel
+
+local bCorner = Instance.new("UICorner")
+bCorner.CornerRadius = UDim.new(0, 6)
+bCorner.Parent = BypassBox
+
+local bTitle = Instance.new("TextLabel")
+bTitle.Size = UDim2.new(1, -10, 0, 30)
+bTitle.Position = UDim2.new(0, 10, 0, 0)
+bTitle.BackgroundTransparency = 1
+bTitle.Text = "🔒 Bypass Sistemi (Hookmetamethod)"
+bTitle.TextColor3 = Color3.fromRGB(0, 119, 182)
+bTitle.TextSize = 13
+bTitle.Font = Enum.Font.GothamBold
+bTitle.TextXAlignment = Enum.TextXAlignment.Left
+bTitle.Parent = BypassBox
+
+-- Hookmetamethod Altyapısı (Delta / Executor Uyumlu)
+local oldNamecall
+if getgenv().hookmetamethod and not oldNamecall then
+    pcall(function()
+        oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+            local method = getnamecallmethod()
+            local args = {...}
+            return oldNamecall(self, unpack(args))
+        end)
+    end)
+end
+
+local bypassList = {
+    "Bypass Giggle", "Bypass Dupe", "Bypass Eyes", 
+    "Bypass LookMan", "Bypass Vacuum (Çekmeyecek)", 
+    "Bypass Banana", "Bypass Jeff", "Bypass KillBricks", "Bypass Snare"
+}
+
+for i, name in ipairs(bypassList) do
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(1, -20, 0, 20)
+    toggleBtn.Position = UDim2.new(0, 10, 0, 25 + (i * 22))
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    toggleBtn.BorderSizePixel = 0
+    toggleBtn.Text = "❌ [KAPALI] " .. name
+    toggleBtn.TextColor3 = Color3.fromRGB(180, 50, 50)
+    toggleBtn.TextSize = 11
+    toggleBtn.Font = Enum.Font.GothamSemibold
+    toggleBtn.TextXAlignment = Enum.TextXAlignment.Left
+    toggleBtn.Parent = BypassBox
+    
+    local tCorner = Instance.new("UICorner")
+    tCorner.CornerRadius = UDim.new(0, 4)
+    tCorner.Parent = toggleBtn
+    
+    local enabled = false
+    toggleBtn.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        if enabled then
+            toggleBtn.Text = "✔️ [AÇIK] " .. name
+            toggleBtn.TextColor3 = Color3.fromRGB(50, 180, 50)
+        else
+            toggleBtn.Text = "❌ [KAPALI] " .. name
+            toggleBtn.TextColor3 = Color3.fromRGB(180, 50, 50)
+        end
+    end)
+end
+
+--------------------------------------------------------------------------------
+-- 2. BÖLÜM: REMOVALS (Seçili Removals Gösterilir & Kaldırılır)
+--------------------------------------------------------------------------------
+local RemovalsBox = Instance.new("Frame")
+RemovalsBox.Size = UDim2.new(1, -20, 0, 110)
+RemovalsBox.Position = UDim2.new(0, 10, 0, 290)
+RemovalsBox.BackgroundColor3 = Color3.fromRGB(240, 248, 255)
+RemovalsBox.BorderSizePixel = 0
+RemovalsBox.Parent = ExploitsPanel
+
+local rCorner = Instance.new("UICorner")
+rCorner.CornerRadius = UDim.new(0, 6)
+rCorner.Parent = RemovalsBox
+
+local rTitle = Instance.new("TextLabel")
+rTitle.Size = UDim2.new(1, -10, 0, 30)
+rTitle.Position = UDim2.new(0, 10, 0, 0)
+rTitle.BackgroundTransparency = 1
+rTitle.Text = "🗑️ Removals (Run Boyu Silme)"
+rTitle.TextColor3 = Color3.fromRGB(0, 119, 182)
+rTitle.TextSize = 13
+rTitle.Font = Enum.Font.GothamBold
+rTitle.TextXAlignment = Enum.TextXAlignment.Left
+rTitle.Parent = RemovalsBox
+
+local removalsList = {"Remove Dread", "Remove Surge"}
+for i, name in ipairs(removalsList) do
+    local remBtn = Instance.new("TextButton")
+    remBtn.Size = UDim2.new(1, -20, 0, 25)
+    remBtn.Position = UDim2.new(0, 10, 0, 32 + (i * 28))
+    remBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    remBtn.BorderSizePixel = 0
+    remBtn.Text = "⭕ [Pasif] " .. name
+    remBtn.TextColor3 = Color3.fromRGB(180, 50, 50)
+    remBtn.TextSize = 11
+    remBtn.Font = Enum.Font.GothamSemibold
+    remBtn.TextXAlignment = Enum.TextXAlignment.Left
+    remBtn.Parent = RemovalsBox
+    
+    local rc = Instance.new("UICorner")
+    rc.CornerRadius = UDim.new(0, 4)
+    rc.Parent = remBtn
+    
+    local active = false
+    remBtn.MouseButton1Click:Connect(function()
+        active = not active
+        if active then
+            remBtn.Text = "✅ [Aktif - Kaldırıldı] " .. name
+            remBtn.TextColor3 = Color3.fromRGB(50, 180, 50)
+            task.spawn(function()
+                while active do
+                    task.wait(1)
+                    pcall(function()
+                        for _, v in pairs(workspace:GetDescendants()) do
+                            if v.Name == name:gsub("Remove ", "") then
+                                v:Destroy()
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            remBtn.Text = "⭕ [Pasif] " .. name
+            remBtn.TextColor3 = Color3.fromRGB(180, 50, 50)
+        end
+    end)
+end
+
+--------------------------------------------------------------------------------
+-- 3. BÖLÜM: DAMAGE (Jumpscare / Hasar Engelleyici)
+--------------------------------------------------------------------------------
+local DamageBox = Instance.new("Frame")
+DamageBox.Size = UDim2.new(1, -20, 0, 140)
+DamageBox.Position = UDim2.new(0, 10, 0, 410)
+DamageBox.BackgroundColor3 = Color3.fromRGB(240, 248, 255)
+DamageBox.BorderSizePixel = 0
+DamageBox.Parent = ExploitsPanel
+
+local dCorner = Instance.new("UICorner")
+dCorner.CornerRadius = UDim.new(0, 6)
+dCorner.Parent = DamageBox
+
+local dTitle = Instance.new("TextLabel")
+dTitle.Size = UDim2.new(1, -10, 0, 30)
+dTitle.Position = UDim2.new(0, 10, 0, 0)
+dTitle.BackgroundTransparency = 1
+dTitle.Text = "🛡️ Damage Korumaları (No Attack)"
+dTitle.TextColor3 = Color3.fromRGB(0, 119, 182)
+dTitle.TextSize = 13
+dTitle.Font = Enum.Font.GothamBold
+dTitle.TextXAlignment = Enum.TextXAlignment.Left
+dTitle.Parent = DamageBox
+
+local damageList = {"No Attack Screech", "No Attack Halt", "No Attack Surge"}
+for i, name in ipairs(damageList) do
+    local dmgBtn = Instance.new("TextButton")
+    dmgBtn.Size = UDim2.new(1, -20, 0, 25)
+    dmgBtn.Position = UDim2.new(0, 10, 0, 32 + (i * 28))
+    dmgBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    dmgBtn.BorderSizePixel = 0
+    dmgBtn.Text = "🛡️ [Korumasız] " .. name
+    dmgBtn.TextColor3 = Color3.fromRGB(180, 50, 50)
+    dmgBtn.TextSize = 11
+    dmgBtn.Font = Enum.Font.GothamSemibold
+    dmgBtn.TextXAlignment = Enum.TextXAlignment.Left
+    dmgBtn.Parent = DamageBox
+    
+    local dc = Instance.new("UICorner")
+    dc.CornerRadius = UDim.new(0, 4)
+    dc.Parent = dmgBtn
+    
+    local dActive = false
+    dmgBtn.MouseButton1Click:Connect(function()
+        dActive = not dActive
+        if dActive then
+            dmgBtn.Text = "🛡️✨ [Koruma Aktif] " .. name
+            dmgBtn.TextColor3 = Color3.fromRGB(50, 180, 50)
+        else
+            dmgBtn.Text = "🛡️ [Korumasız] " .. name
+            dmgBtn.TextColor3 = Color3.fromRGB(180, 50, 50)
+        end
+    end)
+end
